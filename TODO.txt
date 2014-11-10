@@ -1,0 +1,20 @@
+* PyFileMaker:
+
+	    (- implement FMlayout correctly)
+	    (- merge changes from 1.2a3 and 2.0)
+	    (- image/blob export functionality not tested)
+		(- add better support for -script and -script.param now just in {})
+		(- operators as in Google App Engine data models?)
+		(- maybe rewrite to ElementTree?)
+DONE	- support all utf field names and spaces - internally still stripped to ascii
+?? ''   - present empty related records as 'None', and prevent their modification (locking?)
+DONE    - Bug when related table contain field like "Table::field"
+DONE    - Correct date/time format handling 
+DONE    - total-count information
+DONE    - debug can contain log so ussage like: debug.debug(string) is possible
+DONE	- FMServer ... doEdit, doXXX - support for direct editing from FMData, and from dict {}
+DONE	- missing field error - check which field is missing
+DONE	- handling of DateTime (mx.DateTime?), and prevent insertion of wrong date inside
+DONE 	- operators, limit, offset, sort - check
+
+http://www.rmunn.com/sqlalchemy-tutorial/tutorial.html
