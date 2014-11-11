@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
-PyFileMaker - Integrating FileMaker and Python 
-(c) 2006-2008 Klokan Petr Pridal, klokan@klokan.cz 
+PyFileMaker - Integrating FileMaker and Python
+(c) 2014-2014 Marcin Kawa, kawa@aeguana.com
+(c) 2006-2008 Klokan Petr Pridal, klokan@klokan.cz
 (c) 2002-2006 Pieter Claerhout, pieter@yellowduck.be
  
 http://code.google.com/p/pyfilemaker/
