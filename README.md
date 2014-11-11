@@ -7,6 +7,7 @@ Old project urls:
 
 * http://code.google.com/p/pyfilemaker/
 * http://www.yellowduck.be/filemaker/
+
 -------------------------------------------------------------------------------
 ###Examples
 
@@ -86,6 +87,16 @@ you know the connection parameters. I always use the standard port 591.
 
 -------------------------------------------------------------------------------
 ###6. CHANGES
+
+Version 3.0
+
+- Support for FileMaker 13
+- Improve sending requests by using requests lib
+- Add function to fetch files from FileMaker
+- Add function to allow execute script in chain with other command
+- Add function to execute scripts with parameters easily
+- Better code formatting
+- Improve datetime/date/time types handling
 
 Version 2.5 (based on 1.2a2, some features are not merged yet)
 
