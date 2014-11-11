@@ -1,25 +1,20 @@
 Note: This documentation is now also in PyFileMaker/__init__.py. Available as a Docstring for the module.
 
-PyFileMaker
-===========
+#PyFileMaker
 
-Latest version of documentation and code is available at http://code.google.com/p/pyfilemaker
+Old version of documentation and code is available at http://code.google.com/p/pyfilemaker
 
 PyFileMaker module is designed for both script and interactive use.
 Any command used during interactive session is possible to type in a script.
 
-Short introduction
-------------------
+-------------------------------------------------------------------------------
+###Short introduction
 
-run python interactively (or better run ipython):
-
-``$ ipython`` 
-
-Setting of database and layout
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+####Setting of database and layout
 
 In the beginnig you have to set the server, database and layout::
 
+```python
   >> from PyFileMaker import FMServer
 
   >> fm = FMServer('login:password@filemaker.server.com')
@@ -35,26 +30,28 @@ In the beginnig you have to set the server, database and layout::
   >> fm.getLayoutNames()
   ['layoutname','anotherlayout']
   >> fm.setLayout('layoutname')
+```
 
-You can also type directly::
+You can also type directly:
 
+```python
   >> fm = FMServer('login:password@filemaker.server.com','dbname','layoutname')
+```
 
-
-List fieldnames
-~~~~~~~~~~~~~~~
+####List fieldnames
 
 Get the list of fields from the active layout::
 
+```python
   >> fm.doView()
   ['column1', 'column2']
+```
 
-
-Find records
-~~~~~~~~~~~~
+####Find records
 
 To search records::
 
+```python
   >> fm.doFind(column1='abc')
   <FMProResult instance with 2 records>
   [column1='abcdef'
@@ -63,9 +60,11 @@ To search records::
   column1='abc'
   column2='another data'
   RECORDID=2]
+```
 
-You've got list of 2 records, usually you need to work only with one record::
+You've got list of 2 records, usually you need to work only with one record:
 
+```python
   >> a = fm.doFind(column1='abc')
   >> len(a)
   2
@@ -83,29 +82,37 @@ You've got list of 2 records, usually you need to work only with one record::
   'content'
 
   >> fm.doFind( column1='abc', column__related='abc', LOP='OR', SKIP=1, MAX=1)
+```
 
-Get latest record if documentID field is autoincremented during insertion in FileMaker::
+Get latest record if documentID field is autoincremented during insertion in FileMaker:
 
+```python
   >> fm.doFind( SORT=['documentID':'<'], MAX=1)
+```
 
-Or more low level access using dict - for operators, and non-ascii fields::
+Or more low level access using dict - for operators, and non-ascii fields:
 
+```python
   >> fm.doFind( {'documentID.op':'lt', '-max':1})
+```
 
 Any combination of attributes is allowed...
 
-BTW For query empty record::
+BTW For query empty record:
 
+```python
   >> fm.doFind( column1='==')
+```
 
-Editing records
-~~~~~~~~~~~~~~~
+####Editing records
 
 It's enought when you change some variables inside of previosly returned record::
 
+```python
   >> r = fm.doFindAny()[0]
   >> r.column = 'NEWVALUE'
   >> fm.doEdit(r)
+```
 
 This will update only changed column 'column' in table.
 You can use changed old record in other functions too - doDup, doNew, doDelete.
@@ -113,15 +120,17 @@ doFind(r) will find record with the same RECORDID, but MODID is updated.
 
 New records can be specified as arguments of doNew() like::
 
+```python
   fm.doNew(column1='newvalue', column2='old')
   fm.doNew({'column':'newvalue','column2':'old'})
-
-Templates
-~~~~~~~~~
+```
+  
+####Templates
 
 The structure of returned data is suitable for use with Cheetah Templates.
 It is really easy to write a template::
 
+```python
   import Cheetah.Template
   t = Cheetah.Template.Template('''
   Document Template
@@ -134,21 +143,23 @@ It is really easy to write a template::
    - $l.description
   #end for      
   ''', searchList=[r[0]])
+```
 
-
-Debugging connection
-~~~~~~~~~~~~~~~~~~~~
+####Debugging connection
 
 Best way howto debug what's wrong::
 
+```python
   >> fm._debug = True
+```
 
 then check printed url request by external tools (like curl, xmlstarlet):
 
+```
 ``$ curl 'http://test:test@filemaker.server.com:80/fmi/xml/fmresultset.xml?-db=test&-layout=test&-findall' | xmlstarlet fo``
+```
 
-Error reporting
-~~~~~~~~~~~~~~~
+####Error reporting
 
 In case something is not running the way it should, please report an Issue on the the project website.
 New contributions to the code are welcomed. 
