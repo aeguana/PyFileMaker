@@ -108,5 +108,3 @@ class Xml2Obj:
 if __name__ == '__main__':
 	parser = Xml2Obj()
 	element = parser.Parse('sample.xml')
-
-

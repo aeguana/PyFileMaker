@@ -8,7 +8,7 @@ import string
 from exceptions import UnicodeEncodeError
 
 # Hand-made table from PloneTool.py
-mapping_custom_1 =	{
+mapping_custom_1 =  {
 138: 's', 142: 'z', 154: 's', 158: 'z', 159: 'Y' }
 
 # UnicodeData.txt does not contain normalization of Greek letters.
@@ -56,84 +56,82 @@ allowed = string.ascii_letters + string.digits + string.punctuation + whitespace
 allowedid = string.ascii_letters + string.digits + '_' 
 
 def normalizeUnicode(text, encoding='humanascii'):
-	"""
-	This method is used for normalization of unicode characters to the base ASCII
-	letters. Output is ASCII encoded string (or char) with only ASCII letters,
-	digits, punctuation and whitespace characters. Case is preserved.
-	"""
-	if not text:
-		return ""
-	unicodeinput = True
-	if not isinstance(text, unicode):
-		text = unicode(text, 'utf-8')
-		unicodeinput = False
+    """
+    This method is used for normalization of unicode characters to the base ASCII
+    letters. Output is ASCII encoded string (or char) with only ASCII letters,
+    digits, punctuation and whitespace characters. Case is preserved.
+    """
+    unicodeinput = True
+    if not isinstance(text, unicode):
+        text = unicode(text, 'utf-8')
+        unicodeinput = False
 
-	res = ''
-	global allowed, allowedid
-	if encoding == 'humanascii' or encoding == 'identifier':
-		enc = 'ascii'
-	else:
-		enc = encoding
-	for ch in text:
-		if (encoding == 'humanascii') and (ch in allowed):
-			# ASCII chars, digits etc. stay untouched
-			res += ch
-			continue
-		if (encoding == 'identifier') and (ch in allowedid):
-			# ASCII chars, digits etc. stay untouched
-			res += ch
-			continue
-		else:
-			try:
-				ch.encode(enc,'strict')
-				if encoding == 'identifier':
-					res += '_'
-				else:
-					res += ch
-			except UnicodeEncodeError:
-				ordinal = ord(ch)
-				if mapping.has_key(ordinal):
-					# try to apply custom mappings
-					res += mapping.get(ordinal)
-				elif decomposition(ch) or len(normalize('NFKD',ch)) > 1:
-					normalized = filter(lambda i: not combining(i), normalize('NFKD', ch)).strip()
-					# normalized string may contain non-letter chars too. Remove them
-					# normalized string may result to  more than one char
-					if encoding == 'identifier':
-						res += ''.join([c for c in normalized if c in allowedid])
-					else:
-						res += ''.join([c for c in normalized if c in allowed])
-				else:
-					# hex string instead of unknown char
-					res += "%x" % ordinal
-	if encoding == 'identifier':
-		res = res.strip('_').replace('_____','_').replace('____','_').replace('___','_').replace('__','_')
-		if not res.strip('_')[0] in string.ascii_letters:
-			res = '_' + res
-	if unicodeinput:
-		return res
-	else:
-		return res.encode('utf-8')
+    res = ''
+    global allowed, allowedid
+    if encoding == 'humanascii' or encoding == 'identifier':
+        enc = 'ascii'
+    else:
+        enc = encoding
+    for ch in text:
+        if (encoding == 'humanascii') and (ch in allowed):
+            # ASCII chars, digits etc. stay untouched
+            res += ch
+            continue
+        if (encoding == 'identifier') and (ch in allowedid):
+            # ASCII chars, digits etc. stay untouched
+            res += ch
+            continue
+        else:
+            try:
+                ch.encode(enc,'strict')
+                if encoding == 'identifier':
+                    res += '_'
+                else:
+                    res += ch
+            except UnicodeEncodeError:
+                ordinal = ord(ch)
+                if mapping.has_key(ordinal):
+                    # try to apply custom mappings
+                    res += mapping.get(ordinal)
+                elif decomposition(ch) or len(normalize('NFKD',ch)) > 1:
+                    normalized = filter(lambda i: not combining(i), normalize('NFKD', ch)).strip()
+                    # normalized string may contain non-letter chars too. Remove them
+                    # normalized string may result to  more than one char
+                    if encoding == 'identifier':
+                        res += ''.join([c for c in normalized if c in allowedid])
+                    else:
+                        res += ''.join([c for c in normalized if c in allowed])
+                else:
+                    # hex string instead of unknown char
+                    res += "%x" % ordinal
+    if encoding == 'identifier':
+        res = res.strip('_').replace('_____','_').replace('____','_').replace('___','_').replace('__','_')
+        if not res.strip('_')[0] in string.ascii_letters:
+            res = '_' + res
+    if unicodeinput:
+        return res
+    else:
+        return res.encode('utf-8')
 
 #strip_diacritics = lambda text: filter(lambda i: not combining(i), normalize('NFKD', text))
 
 if __name__ == '__main__':
-	s = 'Žluťoučký kůň úpěl. Gjøremål. فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as utf-8 string into cp1252 subset'
-	print s
-	s = normalizeUnicode(s,'cp1252')
-	print s, type(s)
+    s = 'Žluťoučký kůň úpěl. Gjøremål. فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as utf-8 string into cp1252 subset'
+    print s
+    s = normalizeUnicode(s,'cp1252')
+    print s, type(s)
 
-	su = u'Žluťoučký kůň úpěl. Gjøremål. فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as unicode string into cp1250 subset'
-	print su.encode('utf-8')
-	su = normalizeUnicode(su,'cp1252')
-	print su.encode('utf-8'), type(su)
+    su = u'Žluťoučký kůň úpěl. Gjøremål. فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as unicode string into cp1250 subset'
+    print su.encode('utf-8')
+    su = normalizeUnicode(su,'cp1252')
+    print su.encode('utf-8'), type(su)
 
-	s = 'Žluťoučký kůň úpěl. Gjøremål. فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as utf-8 string into humanascii subset'
-	print s
-	s = normalizeUnicode(s)
-	print s, type(s)
+    s = 'Žluťoučký kůň úpěl. Gjøremål. فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as utf-8 string into humanascii subset'
+    print s
+    s = normalizeUnicode(s)
+    print s, type(s)
 
-	s = 'Žluťoučký_kůň-úpěl. Gjøremål	   فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as utf-8 string into identifier subset'
-	print s
-	s = normalizeUnicode(s, 'identifier')
-	print s, type(s)
+    s = 'Žluťoučký_kůň-úpěl. Gjøremål      فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as utf-8 string into identifier subset'
+    print s
+    s = normalizeUnicode(s, 'identifier')
+    print s, type(s)

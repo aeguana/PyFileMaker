@@ -1,5 +1,6 @@
-# PyFileMaker - Integrating FileMaker and Python 
-# (c) 2006-2008 Klokan Petr Pridal, klokan@klokan.cz 
+# PyFileMaker - Integrating FileMaker and Python
+# (c) 2014-2014 Marcin Kawa, kawa@aeguana.com
+# (c) 2006-2008 Klokan Petr Pridal, klokan@klokan.cz
 # (c) 2002-2006 Pieter Claerhout, pieter@yellowduck.be
 # 
 # http://code.google.com/p/pyfilemaker/
@@ -187,7 +188,6 @@ FMErrorNum[976] = 'Security is disabled'
 FMErrorNum[977] = 'Invalid client IP address'
 FMErrorNum[978] = 'The number of allowed guests has been exceeded (for the 10 guest limit over a 12 hour period)'
 
-
 class FMError( StandardError ):
 	"""Exception related to operation with FM."""
 
@@ -196,7 +196,6 @@ class FMFieldError( StandardError ):
 
 class FMServerError( FMError ):
 	"""Exception caused by FileMaker Server"""
-
 
 def FMErrorByNum( num ):
 	"""This function raises an error based on the specified error code."""

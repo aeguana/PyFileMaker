@@ -1,5 +1,6 @@
-# PyFileMaker - Integrating FileMaker and Python 
-# (c) 2006-2008 Klokan Petr Pridal, klokan@klokan.cz 
+# PyFileMaker - Integrating FileMaker and Python
+# (c) 2014-2014 Marcin Kawa, kawa@aeguana.com
+# (c) 2006-2008 Klokan Petr Pridal, klokan@klokan.cz
 # (c) 2002-2006 Pieter Claerhout, pieter@yellowduck.be
 # 
 # http://code.google.com/p/pyfilemaker/
@@ -23,16 +24,14 @@ def key_dict( from_dict ):
 	new2old = {}
 	for key in from_dict:
 		k = normalizeUnicode(key,'identifier')
-		if not k: # ignore empty field names
-			continue
-		i = ''
-		while new_dict.has_key("%s%s" % (k,i) ):
-			if not i:
-				i = 1
-			else:
-				i += 1
-		k = "%s%s" % (k,i)
 		if k != key:
+			i = ''
+			while new_dict.has_key("%s%s" % (k,i) ):
+				if not i:
+					i = 1
+				else:
+					i += 1
+			k = "%s%s" % (k,i)
 			old2new[key] = k
 			new2old[k] = key
 		new_dict[k] = from_dict[key]
@@ -56,7 +55,10 @@ def makeFMData( from_dict, locked = False):
 				value = init_dict[key]
 				date, mo, da, ye, time, ho, mi, se = [None] * 8
 				if type(value) in [str, unicode]:
-					date, mo, da, ye, time, ho, mi, se = reDateTime.match( value ).groups()
+					date, da, mo, ye, time, ho, mi, se = reDateTime.match( value ).groups()
+					if mo and int(mo) > 12:
+						mo, da = da, mo
+
 				if type(init_dict[key]) == dict:
 					setattr(self, key, makeFMData( init_dict[key], locked=False ) ) # lock all substructures??
 				elif type(init_dict[key]) == list:
@@ -167,5 +169,10 @@ def makeFMData( from_dict, locked = False):
 			l.sort()
 			return str(('\n'.join(l)).encode('utf-8'))
 
+		def get(self, key, default=None):
+			try:
+				return self.__getitem__(key)
+			except AttributeError:
+				return default
 
 	return FMData( locked )

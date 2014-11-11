@@ -1,4 +1,5 @@
-# PyFileMaker - Integrating FileMaker and Python 
+# PyFileMaker - Integrating FileMaker and Python
+# (c) 2014-2014 Marcin Kawa, kawa@aeguana.com
 # (c) 2006-2008 Klokan Petr Pridal, klokan@klokan.cz 
 # (c) 2002-2006 Pieter Claerhout, pieter@yellowduck.be
 # 
@@ -10,14 +11,12 @@ import string
 from types import *
 from pprint import pformat
 
-
 # Import the FM modules
 import xml2obj
 from FMError import *
 
 
 class FMXML:
-
 	"""Class defining a basic FMPro XML result."""
 
 	def doParseXMLData( self ):
@@ -44,50 +43,37 @@ class FMXML:
 
 		return xobj
 
-
-	def __getitem__( self, key ):
-		
+	def __getitem__( self, key ):		
 		"""Returns a specific element from the resultset."""
 
 		return self.resultset[key]
 
-
 	def __repr__( self ):
-
 		return "<%s instance WITH LIST OF %s RECORDS (total-count is %d)>\n%s" % (str(self.__class__), len(self), int(self.database['total-count']), pformat( self.resultset))
 		#return "<%s instance with %s records>\n%s" % (str(self.__class__), len(self), pformat(self.resultset))
 
 	def __len__( self ):
-		
 		"""Returns the length of the resultset. This is the same as the number
 		of records that were found."""
 
 		return len( self.resultset )
 
-
-	def doGetXMLElement( self, dom, elementName ):
-		
+	def doGetXMLElement( self, dom, elementName ):		
 		"""Get a single element from a DOM element."""
 
 		return dom.getElements( elementName )[0]
 
-
-	def doGetXMLElements( self, dom, elementName ):
-		
+	def doGetXMLElements( self, dom, elementName ):		
 		"""Get a list of elements from a DOM element."""
 
 		return dom.getElements( elementName )
 
-
 	def doGetXMLAttribute( self, dom, attribute ):
-		
 		"""Get a list of elements from a DOM element."""
 
 		return dom.getAttribute( attribute )
 
-
 	def doGetXMLAttributes( self, dom ):
-		
 		"""Get a list of attributes from a DOM element."""
 
 		return dom.attributes
