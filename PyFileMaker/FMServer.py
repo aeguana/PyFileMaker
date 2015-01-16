@@ -13,6 +13,7 @@ import base64
 import string
 import urllib
 import requests
+import collections
 from datetime import date, time
 import StringIO
 try:
@@ -243,6 +244,44 @@ class FMServer:
 		self._extra_script = request
 
 		return func(**func_kwargs)
+
+	def doFindQuery(self, query_dict, negate_fields={}):
+		query_params = []
+		query_values = []
+
+		_idx = 1
+		for counter, t in enumerate(query_dict.iteritems()):
+			idx = counter + _idx
+			key = t[0]
+			key_value = t[1]
+			if not isinstance(key_value, str) and isinstance(key_value, collections.Iterable):
+				for inner_counter, inner_value in enumerate(key_value):
+					inner_idx = inner_counter + idx
+
+					query_params.append("%s(q%s)"%(negate_fields.get(key, ''), inner_idx))
+					query_values.append(uu({'-q%s'%inner_idx: key}))
+					query_values.append(uu({'-q%s.value'%inner_idx: inner_value}))
+
+					_idx = inner_idx - 1
+			else:
+				query_params.append("%s(q%s)"%(negate_fields.get(key, ''), idx))
+				query_values.append(uu({'-q%s'%idx: key}))
+				query_values.append(uu({'-q%s.value'%idx: key_value}))
+
+		query_params_str = ';'.join(query_params)
+
+		request = [
+			uu({'-db': self._db }),
+			uu({'-lay': self._layout }),
+			'-query=%s'%query_params_str
+		]
+		request += query_values
+		request.append('-findquery')
+
+		result = self._doRequest(request)
+		result = FMResultset.FMResultset(result)
+
+		return result.resultset
 
 	def getDbNames(self):
 		"""This function returns the list of open databases"""
