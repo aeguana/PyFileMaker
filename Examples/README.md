@@ -125,6 +125,30 @@ New records can be specified as arguments of doNew() like::
   fm.doNew({'column':'newvalue','column2':'old'})
 ```
 
+#### Find multiple records by passing list of arguments
+
+This command allow to find all records with attributes passed as keys and values passed as values in the list.
+
+Result of this call will return all objects with id in [1,2,3,4]. If there is no object with id = 4 only three results will be returned.
+
+```python
+  fm.doFindQuery({'id': [1, 2, 3, 4],})
+```
+
+We can query by multiple keys. This call will try to find all elements with id in [1,2,3,4] and color in ['red', 'blue'] and gender 'm'.
+
+```python
+  fm.doFindQuery({'id': [1, 2, 3, 4], 'color': ['red', 'blue'], 'gender': 'm'})
+```
+
+We create exclude query as well, by putting '!' in front of our key.
+This call will try to find all elements with id in [1,2,3,4] and color in ['red', 'blue'] and NOT gender 'm'.
+
+```python
+  fm.doFindQuery({'id': [1, 2, 3, 4], 'color': ['red', 'blue'], '!gender': 'm'})
+```
+
+
 #### Execute scripts
 
 FileMaker API allow to execute scripts. We can execute two types of them with or without parameters. We can send parameter as string separated by special character set from FM side.
@@ -186,7 +210,18 @@ resp = fm.doScriptAfter(fm_server.doNew, {
   'script_params'
 )
 ```
+
+#### Parse response to JSON like dictionary/list
+
+This can parse each response to JSON like response.
   
+```python
+  >> import json
+
+  >>resp = fm.doFind( column1='==')
+  >>json.dumps(fm.toJSON(resp))
+```
+
 ####Templates
 
 The structure of returned data is suitable for use with Cheetah Templates.

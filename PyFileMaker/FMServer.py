@@ -73,6 +73,35 @@ class FMServer:
 		if '--debug' in sys.argv and not debug:
 			self._debug = True
 
+	@staticmethod
+	def toJSON(fm_data, to_lower=False):
+		if str(type(fm_data)) == "<type 'instance'>":
+			ml = []
+			for obj in fm_data:
+				ml.append(FMServer.toJSON(obj))
+			return ml
+		elif str(type(fm_data)) == "<class 'PyFileMaker.FMData.FMData'>":
+			d = {}
+			for field in fm_data:
+				orig_f = field
+				if to_lower:
+					field = field.lower()
+				d[field] = FMServer.toJSON(fm_data[orig_f])
+			return d
+		elif type(fm_data) == list:
+			l = []
+			for item in fm_data:
+				l.append(FMServer.toJSON(item))
+			return l
+		elif isinstance(fm_data, datetime.datetime):
+			return fm_data.strftime('%d/%m/%Y %H:%M')
+		elif isinstance(fm_data, datetime.date):
+			return fm_data.strftime('%d/%m/%Y')
+		elif isinstance(fm_data, datetime.time):
+			return fm_data.strftime('%H:%M')
+		else:
+			return fm_data
+
 	def setDb(self, db):
 		"""Select the database to use. You don't need to specify the file
 		extension. PyFileMaker will do this automatically."""
@@ -245,28 +274,41 @@ class FMServer:
 
 		return func(**func_kwargs)
 
-	def doFindQuery(self, query_dict, negate_fields={}):
+	def doFindQuery(self, query_dict, negate_fields=None):
+		def process_value(idx, key, value):
+			params = []
+			values = []
+			inner_key = key
+			qs_str = "(q%s)"
+			if key.startswith('!'):
+				inner_key = key[1:]
+				qs_str = "!(q%s)"
+
+			params.append(qs_str%idx)
+			values.append(uu({'-q%s'%idx: inner_key}))
+			values.append(uu({'-q%s.value'%idx: value}))
+
+			return params, values
+
 		query_params = []
 		query_values = []
+		if negate_fields is None:
+			negate_fields = {}
 
 		_idx = 1
-		for counter, t in enumerate(query_dict.iteritems()):
-			idx = counter + _idx
-			key = t[0]
-			key_value = t[1]
-			if not isinstance(key_value, str) and isinstance(key_value, collections.Iterable):
-				for inner_counter, inner_value in enumerate(key_value):
-					inner_idx = inner_counter + idx
+		for key, value in query_dict.iteritems():
+			if not isinstance(value, str) and isinstance(value, collections.Iterable):
+				for inner_value in value:
+					q_list = process_value(_idx, key, inner_value)
+					query_params += q_list[0]
+					query_values += q_list[1]
 
-					query_params.append("%s(q%s)"%(negate_fields.get(key, ''), inner_idx))
-					query_values.append(uu({'-q%s'%inner_idx: key}))
-					query_values.append(uu({'-q%s.value'%inner_idx: inner_value}))
-
-					_idx = inner_idx - 1
+					_idx += 1
 			else:
-				query_params.append("%s(q%s)"%(negate_fields.get(key, ''), idx))
-				query_values.append(uu({'-q%s'%idx: key}))
-				query_values.append(uu({'-q%s.value'%idx: key_value}))
+				q_list = process_value(_idx, key, value)
+				query_params += q_list[0]
+				query_values += q_list[1]
+				_idx += 1
 
 		query_params_str = ';'.join(query_params)
 
@@ -278,10 +320,10 @@ class FMServer:
 		request += query_values
 		request.append('-findquery')
 
-		result = self._doRequest(request)
-		result = FMResultset.FMResultset(result)
-
-		return result.resultset
+		resp = self._doRequest(request)
+		result = FMResultset.FMResultset(resp).resultset
+			
+		return result
 
 	def getDbNames(self):
 		"""This function returns the list of open databases"""
@@ -365,7 +407,11 @@ class FMServer:
 		for key in params:
 			self._addDBParam(key, params[key])
 
-		return self._doAction('-find')
+		try:
+			return self._doAction('-find')
+		except FMServerError as e:
+			if e.args[0] in [401, 8]:
+				return []
 
 	def doFindAll(self, WHAT={}, SORT=[], SKIP=None, MAX=None):
 		"""This function will perform the command -findall."""
