@@ -14,7 +14,7 @@ import string
 import urllib
 import requests
 import collections
-from datetime import date, time
+import datetime
 import StringIO
 try:
 	from google.appengine.api import urlfetch
