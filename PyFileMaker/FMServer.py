@@ -259,7 +259,12 @@ class FMServer:
 		result = self._doRequest(request)
 		result = FMResultset.FMResultset(result)
 
-		return result.resultset[0] # Return latest result
+		try:
+			rasp = result.resultset[0] # Try to return latest result
+		except IndexError:
+			resp = None
+
+		return resp
 
 	def doScriptAfter(self, func, func_kwargs={}, script_name='', params=None):
 		""" This function will execute extra script after passed function """
