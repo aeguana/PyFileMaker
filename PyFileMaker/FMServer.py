@@ -260,7 +260,7 @@ class FMServer:
 		result = FMResultset.FMResultset(result)
 
 		try:
-			rasp = result.resultset[0] # Try to return latest result
+			resp = result.resultset[0] # Try to return latest result
 		except IndexError:
 			resp = None
 
