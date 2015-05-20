@@ -88,6 +88,10 @@ you know the connection parameters. I always use the standard port 591.
 -------------------------------------------------------------------------------
 ###6. CHANGES
 
+Version 3.0.2
+ - Fix small bugs.
+ - Update File Maker error codes.
+
 Version 3.0.1
  - Implement toJSON method, that parses FMResultset to JSON type dictionary
  - Add doFindQuery to fetch objects by passing list of attributes [(-findquery)](https://fmhelp.filemaker.com/docs/13/en/fms13_cwp_xml.pdf#page=50) check the API.
