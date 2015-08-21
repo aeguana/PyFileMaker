@@ -88,6 +88,9 @@ you know the connection parameters. I always use the standard port 591.
 -------------------------------------------------------------------------------
 ###6. CHANGES
 
+Version 3.0.2.1
+ - Fix regex for FM server name.
+
 Version 3.0.2
  - Fix small bugs.
  - Update File Maker error codes.

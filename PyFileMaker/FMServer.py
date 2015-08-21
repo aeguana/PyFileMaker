@@ -38,7 +38,8 @@ class FMServer:
 
 		self._url = url
 
-		m = re.match(r'^((?P<protocol>http)://)?((?P<login>\w+)(:(?P<password>\w+))?@)?(?P<host>[\d\w\.\-]+)(:(?P<port>\d+))?/?(?P<address>/.+)?$', self._url)
+		m = re.match(r'^((?P<protocol>http)://)?((?P<login>\w+)(:(?P<password>\w+))?@)?(?P<host>[\d\w\-.]+)(:(?P<port>\d+))?/?(?P<address>/.+)?$', self._url)
+
 		if not m:
 			raise FMError, "Address of FileMaker Server is not correctly formatted"
 
