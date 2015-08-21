@@ -19,13 +19,13 @@ setup(
         'Topic :: Database :: Database Engines/Servers',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    keywords='FileMaker'
+    keywords='FileMaker',
     author='Klokan Petr Pridal, Pieter Claerhout, Marcin Kawa',
     author_email='klokan@klokan.cz, pieter@yellowduck.be, kawa.macin@gmail.com',
     url='https://github.com/aeguana/PyFileMaker',
-    download_url='https://github.com/aeguana/PyFileMaker/releases'
+    download_url='https://github.com/aeguana/PyFileMaker/releases',
     license='http://www.opensource.org/licenses/bsd-license.php',
     platforms = ['any'],
-    packages=['PyFileMaker']
-    install_requires='requests'
+    packages=['PyFileMaker'],
+    install_requires=['requests'],
 )
