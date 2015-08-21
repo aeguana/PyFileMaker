@@ -665,5 +665,6 @@ class FMServer:
 			url = url,
 			auth = (self._login, self._password)
 		)
-
+		resp.raise_for_status()
+		
 		return resp.content
