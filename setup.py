@@ -19,7 +19,7 @@ setup(
         'Topic :: Database :: Database Engines/Servers',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    keywords='FileMaker',
+    keywords=['FileMaker'],
     author='Klokan Petr Pridal, Pieter Claerhout, Marcin Kawa',
     author_email='klokan@klokan.cz, pieter@yellowduck.be, kawa.macin@gmail.com',
     url='https://github.com/aeguana/PyFileMaker',
