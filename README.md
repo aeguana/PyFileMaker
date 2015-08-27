@@ -63,6 +63,14 @@ There is nothing special to configure on PyFileMaker. Just make sure the
 PyFileMaker directory, which contains the file FMPro.py/FMServer.py file is
 somewhere in your Python path so that Python knows where to find the module.
 
+You can install v2.6 from pypi using pip
+```
+$ pip install PyFileMaker
+```
+You also can install the development version directly from github
+```
+pip install -e git+https://github.com/aeguana/PyFileMaker.git#egg=PyFileMaker
+```
 -------------------------------------------------------------------------------
 ###4. HOW TO SET UP YOUR DATABASE
 
