@@ -280,8 +280,8 @@ class FMServer:
 
 		return func(**func_kwargs)
 
-	def doFindQuery(self, query_dict, negate_fields=None):
-		def process_value(idx, key, value):
+	def doFindQuery(self, query_dict):
+		def _or_process_value(idx, key, value):
 			params = []
 			values = []
 			inner_key = key
@@ -296,22 +296,49 @@ class FMServer:
 
 			return params, values
 
+		def _and_process_value(idx, key, value):
+			params = []
+			values = []
+			inner_key = key
+			qs_str = "q%s"
+
+			params.append(qs_str%idx)
+			values.append(uu({'-q%s'%idx: inner_key}))
+			values.append(uu({'-q%s.value'%idx: value}))
+
+			return params, values
+
 		query_params = []
 		query_values = []
-		if negate_fields is None:
-			negate_fields = {}
-
 		_idx = 1
 		for key, value in query_dict.iteritems():
-			if not isinstance(value, str) and isinstance(value, collections.Iterable):
+			if isinstance(value, collections.Mapping):
+				inner_query_params = []
+				for inner_key, inner_value in value.iteritems():
+					if not isinstance(inner_value, str) and isinstance(inner_value, collections.Iterable):
+						for inner_inner_value in inner_value:
+							q_list = _and_process_value(_idx, inner_key, inner_inner_value)
+							inner_query_params += q_list[0]
+							query_values += q_list[1]
+
+							_idx += 1
+					else:
+						q_list = _and_process_value(_idx, inner_key, inner_value)
+						inner_query_params += q_list[0]
+						query_values += q_list[1]
+						_idx += 1
+
+				query_params += ['(%s)' % ', '.join(inner_query_params)]
+
+			elif not isinstance(value, str) and isinstance(value, collections.Iterable):
 				for inner_value in value:
-					q_list = process_value(_idx, key, inner_value)
+					q_list = _or_process_value(_idx, key, inner_value)
 					query_params += q_list[0]
 					query_values += q_list[1]
 
 					_idx += 1
 			else:
-				q_list = process_value(_idx, key, value)
+				q_list = _or_process_value(_idx, key, value)
 				query_params += q_list[0]
 				query_values += q_list[1]
 				_idx += 1
