@@ -127,27 +127,63 @@ New records can be specified as arguments of doNew() like::
 
 #### Find multiple records by passing list of arguments
 
-This command allow to find all records with attributes passed as keys and values passed as values in the list.
+This command allows to find all records with attributes passed as keys and values passed as values in the list.
 
-Result of this call will return all objects with id in [1,2,3,4]. If there is no object with id = 4 only three results will be returned.
+##### Creating OR query
+
+All query arguments are treated as separate arguments and each of it will include more results if any.
+
+1. Result of this call will return all objects with id in [1,2,3,4]. If there is no object with id = 4 only three results will be returned.
 
 ```python
   fm.doFindQuery({'id': [1, 2, 3, 4],})
 ```
 
-We can query by multiple keys. This call will try to find all elements with id in [1,2,3,4] and color in ['red', 'blue'] and gender 'm'.
+2. We can query by multiple keys. This call will try to find all elements with id in [1,2,3,4] or color in ['red', 'blue'] or gender 'm'.
 
 ```python
   fm.doFindQuery({'id': [1, 2, 3, 4], 'color': ['red', 'blue'], 'gender': 'm'})
 ```
 
-We create exclude query as well, by putting '!' in front of our key.
-This call will try to find all elements with id in [1,2,3,4] and color in ['red', 'blue'] and NOT gender 'm'.
+3. We can create exclude query as well, by putting '!' in front of our key.
+This call will try to find all elements with id in [1,2,3,4] or color in ['red', 'blue'] and NOT gender 'm'.
 
 ```python
   fm.doFindQuery({'id': [1, 2, 3, 4], 'color': ['red', 'blue'], '!gender': 'm'})
 ```
 
+##### Creating AND query
+
+By using the syntax as showed below we can create AND query and force FM to take in consideration all arguments 
+
+1. Find all entries with gender equal 'm' and color 'red'.
+```python
+  fm.doFindQuery({
+    'subquery_1': {
+      'color': 'red',
+      'gender': 'm'
+    }
+  })
+```
+Note: Key name `subquery_x` is just a convention and it's not included to the XML query itself. It's used only to distinguish the AND groups.
+
+##### Combine AND and OR
+
+Both syntaxes can be combined to create complex queries
+
+1. Find all entries with gender equal 'm' and color 'red' or gender equal 'f' and color 'blue'.
+```python
+  fm.doFindQuery({
+    'subquery_1': {
+        'color': 'red',
+        'gender': 'm'
+    },
+    'subquery_2': {
+        'color': 'blue',
+        'gender': 'f'
+    },
+  })
+```
 
 #### Execute scripts
 

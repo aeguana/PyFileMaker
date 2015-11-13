@@ -96,6 +96,9 @@ you know the connection parameters. I always use the standard port 591.
 -------------------------------------------------------------------------------
 ###6. CHANGES
 
+Version 3.0.2.2
+ - Add handle for AND case when executing --findquery.
+
 Version 3.0.2.1
  - Fix regex for FM server name.
 
