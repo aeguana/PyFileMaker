@@ -678,6 +678,9 @@ class FMServer:
 			request = '&'.join(request)
 			url = "%s?%s" % (self._buildUrl(), request)
 
+		if self._debug:
+			print '[PyFileMaker DEBUG] ', url
+
 		resp = requests.get(
 			url = url,
 			auth = (self._login, self._password)
