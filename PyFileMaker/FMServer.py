@@ -12,6 +12,7 @@ import re
 import base64
 import string
 import urllib
+import urlparse
 import requests
 import collections
 import datetime
@@ -33,29 +34,18 @@ uu = urllib.urlencode
 class FMServer:
 	"""The main class for communicating with FileMaker Server"""
 
-	def __init__(self, url='http://login:password@localhost/', db='', layout='', debug=False):
+	def __init__(self, url='http://login:password@localhost/fmi/xml/fmresultset.xml', db='', layout='', debug=False):
 		"""Class constructor"""
 
 		self._url = url
+		parsed = urlparse.urlparse(self._url)
 
-		m = re.match(r'^((?P<protocol>http)://)?((?P<login>\w+)(:(?P<password>\w+))?@)?(?P<host>[\d\w\-.]+)(:(?P<port>\d+))?/?(?P<address>/.+)?$', self._url)
-
-		if not m:
-			raise FMError, "Address of FileMaker Server is not correctly formatted"
-
-		self._protocol = m.group('protocol')
-		self._login = m.group('login')
-		self._password = m.group('password')
-		self._host = m.group('host')
-		self._port = m.group('port')
-		self._address = m.group('address')
-
-		if not self._protocol: self._protocol = 'http'
-		if not self._host: self._host = 'localhost'
-		if not self._port: self._port = 80
-		if not self._address: self._address = '/fmi/xml/fmresultset.xml'
-		if not self._login: self._login = 'pyfilemaker'
-		if not self._password: self._password = ''
+		self._protocol = parsed.scheme   or 'http'
+		self._login    = parsed.username or 'pyfilemaker'
+		self._password = parsed.password or ''
+		self._host     = parsed.hostname or 'localhost'
+		self._port     = parsed.port     or 80
+		self._address  = parsed.path     or '/fmi/xml/fmresultset.xml'
 
 		self._file_address = 'fmi/xml/cnt/data.%(extension)s'
 		self._extra_script = None
