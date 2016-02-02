@@ -17,7 +17,7 @@ In the beginnig you have to set the server, database and layout::
 ```python
   >> from PyFileMaker import FMServer
 
-  >> fm = FMServer('login:password@filemaker.server.com')
+  >> fm = FMServer('http://login:password@filemaker.server.com')
   >> fm.
   [and press Tab to see available methods and variables]
   >> help fm.getDbNames
@@ -35,7 +35,7 @@ In the beginnig you have to set the server, database and layout::
 You can also type directly:
 
 ```python
-  >> fm = FMServer('login:password@filemaker.server.com','dbname','layoutname')
+  >> fm = FMServer('http://login:password@filemaker.server.com','dbname','layoutname')
 ```
 
 ####List fieldnames

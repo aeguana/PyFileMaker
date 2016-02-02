@@ -1,12 +1,12 @@
 # PyFileMaker - Integrating FileMaker and Python
-# (c) 2014-2014 Marcin Kawa, kawa@aeguana.com
+# (c) 2014-2016 Marcin Kawa, kawa.macin@gmail.com
 # (c) 2006-2008 Klokan Petr Pridal, klokan@klokan.cz
 # (c) 2002-2006 Pieter Claerhout, pieter@yellowduck.be
 # 
 # http://code.google.com/p/pyfilemaker/
 # http://www.yellowduck.be/filemaker/
 
-__version__ = "3.0.2.2"
+__version__ = "3.1"
 
 # Import the main modules
 import sys

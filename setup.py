@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
 from setuptools import setup
-from PyFileMaker import __version__, __doc__
+from PyFileMaker import __version__
 
 setup(
     name='PyFileMaker',
     version=__version__,
     description='Python Object Wrapper for FileMaker Server XML Interface',
-    long_description=__doc__,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',

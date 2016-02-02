@@ -1,5 +1,5 @@
 #PyFileMaker - Integrating FileMaker and Python
-* (c) 2014-2014 Marcin Kawa, kawa@aeguana.com
+* (c) 2014-2016 Marcin Kawa, kawa.macin@gmail.com
 * (c) 2006-2008 Klokan Petr Pridal, klokan@klokan.cz
 * (c) 2002-2006 Pieter Claerhout, pieter@yellowduck.be
 
@@ -11,7 +11,7 @@ Old project urls:
 -------------------------------------------------------------------------------
 ###Examples
 
-- All examles can be found in *Examples* dir
+- All examles can be found in *[Examples](https://github.com/aeguana/PyFileMaker/tree/master/Examples)* dir
 
 -------------------------------------------------------------------------------
 
@@ -95,6 +95,11 @@ you know the connection parameters. I always use the standard port 591.
 
 -------------------------------------------------------------------------------
 ###6. CHANGES
+
+Version 3.3
+ - Code cleanup.
+ - Update documentation
+ - Prepare for PyPi
 
 Version 3.0.2.2
  - Add handle for AND case when executing --findquery.
