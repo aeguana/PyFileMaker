@@ -44,7 +44,7 @@ class FMServer:
 		self._login    = parsed.username or 'pyfilemaker'
 		self._password = parsed.password or ''
 		self._host     = parsed.hostname or 'localhost'
-		self._port     = parsed.port     or 443 if self._protocol == 'https' else 80
+		self._port     = parsed.port     or (443 if self._protocol == 'https' else 80)
 		self._address  = parsed.path     or '/fmi/xml/fmresultset.xml'
 
 		self._file_address = 'fmi/xml/cnt/data.%(extension)s'
