@@ -7,6 +7,7 @@
 # http://www.yellowduck.be/filemaker/
 
 # Import the main modules
+from __future__ import unicode_literals
 from exceptions import StandardError
 
 FMErrorNum = {}
@@ -296,8 +297,8 @@ def FMErrorByNum( num ):
     """This function raises an error based on the specified error code."""
 
     if not num in FMErrorNum.keys():
-        raise FMServerError, (num, FMErrorNum[-1])
+        raise FMServerError(num, FMErrorNum[-1])
     elif num == 102:
-        raise FMFieldError, (num, FMErrorNum[num])
+        raise FMFieldError(num, FMErrorNum[num])
     else:
-        raise FMServerError, (num, FMErrorNum[num])
+        raise FMServerError(num, FMErrorNum[num])

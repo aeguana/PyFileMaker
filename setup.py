@@ -26,5 +26,5 @@ setup(
     license='http://www.opensource.org/licenses/bsd-license.php',
     platforms = ['any'],
     packages=['PyFileMaker'],
-    install_requires=['requests'],
+    install_requires=['future', 'requests'],
 )

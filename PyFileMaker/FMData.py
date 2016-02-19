@@ -7,6 +7,8 @@
 # http://www.yellowduck.be/filemaker/
 
 # Import the main modules
+from __future__ import print_function, unicode_literals
+from past.builtins import basestrin
 try:
 	from mx.DateTime import DateTime, Time, Date
 except:
@@ -54,7 +56,7 @@ def makeFMData( from_dict, locked = False):
 			for key in init_dict:
 				value = init_dict[key]
 				date, mo, da, ye, time, ho, mi, se = [None] * 8
-				if type(value) in [str, unicode]:
+				if isinstance(value, basestring):
 					date, da, mo, ye, time, ho, mi, se = reDateTime.match( value ).groups()
 					if mo and int(mo) > 12:
 						mo, da = da, mo
@@ -82,21 +84,21 @@ def makeFMData( from_dict, locked = False):
 
 		def __setattr__(self, key, value):
 			if '__locked__' in self.__modified__:
-				raise AttributeError, "This substructure is read-only, so you cannot modify '%s' attribute." % key
+				raise AttributeError("This substructure is read-only, so you cannot modify '%s' attribute." % key)
 			oldvalue = None
 			if hasattr(self, key):
 				oldvalue = getattr(self, key)
 			#if oldvalue != None and type(oldvalue) != type(value):
-			#	 raise TypeError, "Type of field '%s' is %s, you cannot insert %s" % (key, type(oldvalue), type(value))
+			#	 raise TypeError("Type of field '%s' is %s, you cannot insert %s" % (key, type(oldvalue), type(value)))
 			object.__setattr__(self, key, value)
 			if oldvalue != None and value != oldvalue:
 				self.__modified__.add(key)
 
 		def __getitem__(self, key):
-			if type(key) == str or type(key) == unicode:
+			if isinstance(key, basestring):
 				spl = key.split('.')
 			else:
-				print "-"*20, key, type(key)
+				print("-"*20, key, type(key))
 			if len(spl) == 2:
 				if self.__old2new__.has_key(spl[0]):
 					spl[0] = self.__old2new__[spl[0]]

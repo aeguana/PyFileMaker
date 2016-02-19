@@ -3,6 +3,7 @@
 #
 # The normalizeUnicode() function, inspired by Plone's
 
+from __future__ import print_function, unicode_literals
 from unicodedata import normalize, decomposition, combining
 import string
 from exceptions import UnicodeEncodeError
@@ -117,21 +118,21 @@ def normalizeUnicode(text, encoding='humanascii'):
 
 if __name__ == '__main__':
     s = 'Žluťoučký kůň úpěl. Gjøremål. فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as utf-8 string into cp1252 subset'
-    print s
+    print(s)
     s = normalizeUnicode(s,'cp1252')
-    print s, type(s)
+    print(s, type(s))
 
     su = u'Žluťoučký kůň úpěl. Gjøremål. فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as unicode string into cp1250 subset'
-    print su.encode('utf-8')
+    print(su.encode('utf-8'))
     su = normalizeUnicode(su,'cp1252')
-    print su.encode('utf-8'), type(su)
+    print(su.encode('utf-8'), type(su))
 
     s = 'Žluťoučký kůň úpěl. Gjøremål. فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as utf-8 string into humanascii subset'
-    print s
+    print(s)
     s = normalizeUnicode(s)
-    print s, type(s)
+    print(s, type(s))
 
     s = 'Žluťoučký_kůň-úpěl. Gjøremål      فвХΩΧΨÂÄÅÇßåãðþĖĔĒĐĜĞĠĢĤĳĽŬ Süßmittel as utf-8 string into identifier subset'
-    print s
+    print(s)
     s = normalizeUnicode(s, 'identifier')
-    print s, type(s)
+    print(s, type(s))

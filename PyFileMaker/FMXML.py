@@ -7,6 +7,7 @@
 # http://www.yellowduck.be/filemaker/
 
 # Import the main modules
+from __future__ import unicode_literals
 import string
 from types import *
 from pprint import pformat

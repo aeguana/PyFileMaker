@@ -7,6 +7,7 @@
 # http://www.yellowduck.be/filemaker/
 
 # Import the main modules
+from __future__ import print_function, unicode_literals
 import string
 from types import *
 import re
@@ -129,39 +130,36 @@ class FMResultset(FMXML.FMXML):
 		"""Shows the contents of our resultset."""
 
 		if xml == 0:
-			print 'Errorcode:', self.errorcode
-			print 
+			print('Errorcode:', self.errorcode, '\n')
 			
-			print 'Product information:'
+			print('Product information:')
 			for key in self.product.keys():
-				print '	 ', key.encode('UTF-8'),
-				print '->', self.product[key].encode('UTF-8')
+				print('	 ', key.encode('UTF-8'))
+				print('->', self.product[key].encode('UTF-8'))
 			print
 			
-			print 'Database information:'
+			print('Database information:')
 			for key in self.database.keys():
-				print '	 ', key.encode('UTF-8'),
-				print'->', self.database[key].encode('UTF-8')
+				print('	 ', key.encode('UTF-8'))
+				print('->', self.database[key].encode('UTF-8'))
 			print
 			
-			print 'Metadata:'
+			print('Metadata:')
 			for field in self.metadata.keys():
-				print
-				print '	  ', field.encode('UTF-8')
+				print('	  ', field.encode('UTF-8'))
 				for property in self.metadata[field]:
-					print '		  ', property.encode('UTF-8'),
-					print '->', self.metadata[field][property].encode('UTF-8') 
-			print
+					print('		  ', property.encode('UTF-8'))
+					print('->', self.metadata[field][property].encode('UTF-8'))
 
-			print 'Records:'
+			print('Records:')
 			for record in self.resultset:
 				print
 				for column in record:
-					print '	  ', column.encode('UTF-8'),
+					print('	  ', column.encode('UTF-8'))
 					if type(record[column]) == UnicodeType:
-						print '->', record[column].encode('UTF-8')
+						print('->', record[column].encode('UTF-8'))
 					else:
-						print '->', record[column]
+						print('->', record[column])
 
 		else:
 			tags = [
@@ -183,4 +181,4 @@ class FMResultset(FMXML.FMXML):
 				xml = string.replace(xml, '></' + tag, '>\n</' + tag)
 				xml = string.replace(xml, '><' + tag, '>\n<' + tag)
 
-			print xml
+			print(xml)

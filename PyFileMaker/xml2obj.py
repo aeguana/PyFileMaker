@@ -2,6 +2,7 @@
 Borrowed from wxPython XML tree demo and modified.
 """
 
+from __future__ import unicode_literals
 import sys
 import string
 from xml.parsers import expat
