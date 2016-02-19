@@ -9,23 +9,14 @@
 # Import the main modules
 import sys
 import re
-import base64
 import string
 import urllib
 import urlparse
 import requests
 import collections
 import datetime
-import StringIO
-try:
-	from google.appengine.api import urlfetch
-except:
-	urlfetch = False
-import httplib	
-from exceptions import StandardError
 
 # Import the FM modules
-import xml2obj
 import FMResultset
 from FMError import *
 
@@ -305,7 +296,7 @@ class FMServer:
 			if isinstance(value, collections.Mapping):
 				inner_query_params = []
 				for inner_key, inner_value in value.iteritems():
-					if not isinstance(inner_value, str) and isinstance(inner_value, collections.Iterable):
+					if not isinstance(inner_value, basestring) and isinstance(inner_value, collections.Iterable):
 						for inner_inner_value in inner_value:
 							q_list = _and_process_value(_idx, inner_key, inner_inner_value)
 							inner_query_params += q_list[0]
@@ -320,7 +311,7 @@ class FMServer:
 
 				query_params += ['(%s)' % ', '.join(inner_query_params)]
 
-			elif not isinstance(value, str) and isinstance(value, collections.Iterable):
+			elif not isinstance(value, basestring) and isinstance(value, collections.Iterable):
 				for inner_value in value:
 					q_list = _or_process_value(_idx, key, inner_value)
 					query_params += q_list[0]
