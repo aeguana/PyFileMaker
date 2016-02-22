@@ -8,7 +8,6 @@
 
 # Import the main modules
 from __future__ import unicode_literals
-from exceptions import StandardError
 
 FMErrorNum = {}
 FMErrorNum[-1] = 'Unknown error'
@@ -284,10 +283,10 @@ FMErrorNum[20413] = 'Too Many Files'
 FMErrorNum[20605] = 'No network connection is available'
 FMErrorNum[20606] = 'Fail to resolve network address'
 
-class FMError( StandardError ):
+class FMError( Exception ):
     """Exception related to operation with FM."""
 
-class FMFieldError( StandardError ):
+class FMFieldError( Exception ):
     """Exception for missing field inside of FM (e.g. FMError 102)."""
 
 class FMServerError( FMError ):

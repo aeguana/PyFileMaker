@@ -6,7 +6,6 @@
 from __future__ import print_function, unicode_literals
 from unicodedata import normalize, decomposition, combining
 import string
-from exceptions import UnicodeEncodeError
 
 # Hand-made table from PloneTool.py
 mapping_custom_1 =  {
@@ -62,10 +61,6 @@ def normalizeUnicode(text, encoding='humanascii'):
     letters. Output is ASCII encoded string (or char) with only ASCII letters,
     digits, punctuation and whitespace characters. Case is preserved.
     """
-    unicodeinput = True
-    if not isinstance(text, unicode):
-        text = unicode(text, 'utf-8')
-        unicodeinput = False
 
     res = ''
     global allowed, allowedid
@@ -89,11 +84,11 @@ def normalizeUnicode(text, encoding='humanascii'):
                     res += '_'
                 else:
                     res += ch
-            except UnicodeEncodeError:
+            except:
                 ordinal = ord(ch)
-                if mapping.has_key(ordinal):
+                if mapping.get(ordinal):
                     # try to apply custom mappings
-                    res += mapping.get(ordinal)
+                    res += mapping[ordinal]
                 elif decomposition(ch) or len(normalize('NFKD',ch)) > 1:
                     normalized = filter(lambda i: not combining(i), normalize('NFKD', ch)).strip()
                     # normalized string may contain non-letter chars too. Remove them
@@ -109,10 +104,8 @@ def normalizeUnicode(text, encoding='humanascii'):
         res = res.strip('_').replace('_____','_').replace('____','_').replace('___','_').replace('__','_')
         if not res.strip('_')[0] in string.ascii_letters:
             res = '_' + res
-    if unicodeinput:
-        return res
-    else:
-        return res.encode('utf-8')
+    
+    return res.encode('utf-8')
 
 #strip_diacritics = lambda text: filter(lambda i: not combining(i), normalize('NFKD', text))
 

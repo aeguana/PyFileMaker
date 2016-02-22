@@ -8,14 +8,13 @@
 
 # Import the main modules
 from __future__ import print_function, unicode_literals
-from past.builtins import basestrin
+from past.builtins import basestring
 try:
 	from mx.DateTime import DateTime, Time, Date
 except:
 	from datetime import datetime as DateTime, time as Time, date as Date
 from re import compile
 from FMError import FMError
-from UnicodeNormalizer import normalizeUnicode
 
 reDateTime = compile('((\d{2})/(\d{2})/(\d{4}))? ?((\d{2}):(\d{2}):(\d{2}))?')
 
@@ -25,7 +24,7 @@ def key_dict( from_dict ):
 	old2new = {}
 	new2old = {}
 	for key in from_dict:
-		k = normalizeUnicode(key,'identifier')
+		k = unicodedata.normalize('NFKD', key).encode('ASCII', 'ignore')
 		if k != key:
 			i = ''
 			while new_dict.has_key("%s%s" % (k,i) ):

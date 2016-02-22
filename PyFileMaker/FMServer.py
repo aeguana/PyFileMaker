@@ -9,20 +9,22 @@
 # Import the main modules
 from __future__ import print_function, unicode_literals
 from past.builtins import basestring
+from future.standard_library import install_aliases
+install_aliases()
+
 import sys
 import re
 import string
-import urllib
-import urlparse
 import requests
 import collections
 import datetime
+from urllib.parse import urlparse, urlencode
 
 # Import the FM modules
 import FMResultset
 from FMError import *
 
-uu = urllib.urlencode
+uu = urlencode
 
 class FMServer:
 	"""The main class for communicating with FileMaker Server"""
@@ -31,7 +33,7 @@ class FMServer:
 		"""Class constructor"""
 
 		self._url = url
-		parsed = urlparse.urlparse(self._url)
+		parsed = urlparse(self._url)
 
 		self._protocol = parsed.scheme   or 'http'
 		self._login    = parsed.username or 'pyfilemaker'
@@ -643,7 +645,7 @@ class FMServer:
 
 	def _buildUrl(self):
 		"""Builds url for normal FM requests."""
-		return '%(protocol)s://%(host)s:%(port)s/%(address)s'%{
+		return '%(protocol)s://%(host)s:%(port)s%(address)s'%{
 			'protocol': self._protocol,
 			'host': self._host,
 			'port': self._port,

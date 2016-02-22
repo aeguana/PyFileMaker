@@ -3,6 +3,7 @@ Borrowed from wxPython XML tree demo and modified.
 """
 
 from __future__ import unicode_literals
+from builtins import str
 import sys
 import string
 from xml.parsers import expat
@@ -31,7 +32,7 @@ class Element:
 	def getData(self):
 		'Get the cdata'
 		## HACK: string.strip to remove unneeded spaces.
-		return string.strip( self.cdata )
+		return str(self.cdata).strip()
 		
 	def getElements(self,name=''):
 		'Get a list of child elements'
@@ -53,9 +54,9 @@ class Xml2Obj:
 		self.nodeStack = []
 		
 	def StartElement(self,name,attributes):
-		'SAX start element even handler'
+		'SAX start element event handler'
 		# Instantiate an Element object
-		element = Element(name.encode(),attributes)
+		element = Element(name.encode(), attributes)
 		
 		# Push element onto the stack and make it a child of parent
 		if len(self.nodeStack) > 0:
@@ -73,7 +74,7 @@ class Xml2Obj:
 		'SAX character data event handler'
 		## HACK: to preserve the newlines
 		#if string.strip(data):
-		data = data.encode("utf-8")
+		data = str(data.encode("utf-8"))
 		element = self.nodeStack[-1]
 		element.cdata += data
 		return
@@ -94,7 +95,7 @@ class Xml2Obj:
 
 	def ParseString(self,data):
 		# Create a SAX parser
-		Parser = expat.ParserCreate()
+		Parser = expat.ParserCreate('utf-8')
 
 		# SAX event handlers
 		Parser.StartElementHandler = self.StartElement
