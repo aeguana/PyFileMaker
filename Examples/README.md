@@ -87,7 +87,7 @@ You've got list of 2 records, usually you need to work only with one record:
 Get latest record if documentID field is autoincremented during insertion in FileMaker:
 
 ```python
-  >> fm.doFind( SORT=['documentID':'<'], MAX=1)
+  >> fm.doFind( SORT={'documentID':'<'}, MAX=1)
 ```
 
 Or more low level access using dict - for operators, and non-ascii fields:
