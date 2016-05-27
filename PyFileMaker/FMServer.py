@@ -641,7 +641,7 @@ class FMServer:
 
 	def _buildUrl(self):
 		"""Builds url for normal FM requests."""
-		return '%(protocol)s://%(host)s:%(port)s/%(address)s'%{
+		return '%(protocol)s://%(host)s:%(port)s%(address)s'%{
 			'protocol': self._protocol,
 			'host': self._host,
 			'port': self._port,
