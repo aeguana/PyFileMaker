@@ -154,7 +154,7 @@ This call will try to find all elements with id in [1,2,3,4] or color in ['red',
 
 ##### Creating AND query
 
-By using the syntax as showed below we can create AND query and force FM to take in consideration all arguments 
+By using the syntax as showed below we can create AND query and force FM to take in consideration all arguments
 
 1. Find all entries with gender equal 'm' and color 'red'.
 ```python
@@ -189,6 +189,7 @@ Both syntaxes can be combined to create complex queries
 
 FileMaker API allow to execute scripts. We can execute two types of them with or without parameters. We can send parameter as string separated by special character set from FM side.
 
+NOTE - If script returns any results, by default only the first result will be returned. If you want the full resultset to be returned, pass `return_all=True`.
 
 ```python
 # execute script without parameters
@@ -197,6 +198,9 @@ resp = fm.doScript('script_name')
 # execute script with parameters
 parameters = "first|second|third"
 resp = fm.doScript('script_name', params=parameters)
+
+# execute script without parameters
+resp_resultset = fm.doScript('script_name', return_all=True)
 ```
 
 #### Retrieve files
@@ -250,7 +254,7 @@ resp = fm.doScriptAfter(fm_server.doNew, {
 #### Parse response to JSON like dictionary/list
 
 This can parse each response to JSON like response.
-  
+
 ```python
   >> import json
 
@@ -295,4 +299,4 @@ then check printed url request by external tools (like curl, xmlstarlet):
 ####Error reporting
 
 In case something is not running the way it should, please report an Issue on the the project website.
-New contributions to the code are welcomed. 
+New contributions to the code are welcomed.

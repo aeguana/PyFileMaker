@@ -2,7 +2,7 @@
 # (c) 2014-2016 Marcin Kawa, kawa.macin@gmail.com
 # (c) 2006-2008 Klokan Petr Pridal, klokan@klokan.cz
 # (c) 2002-2006 Pieter Claerhout, pieter@yellowduck.be
-# 
+#
 # http://code.google.com/p/pyfilemaker/
 # http://www.yellowduck.be/filemaker/
 
@@ -40,7 +40,7 @@ class FMServer:
 
 		self._file_address = 'fmi/xml/cnt/data.%(extension)s'
 		self._extra_script = None
-		
+
 		self._maxRecords = 0
 		self._skipRecords = 0
 
@@ -87,7 +87,7 @@ class FMServer:
 	def setDb(self, db):
 		"""Select the database to use. You don't need to specify the file
 		extension. PyFileMaker will do this automatically."""
-		
+
 		self._db = db
 
 	def setLayout(self, layout):
@@ -199,7 +199,7 @@ class FMServer:
 
 			if not string.lower(order) in validSortOrders.keys():
 				raise FMError, 'Invalid sort order for "' + field + '"'
-		
+
 		self._sortParams.append(
 			[field, validSortOrders[string.lower(order)]]
 		)
@@ -225,7 +225,7 @@ class FMServer:
 		file_binary = self._doRequest(is_file=True, file_xml_uri=file_xml_uri)
 		return (file_name, file_extension, file_binary)
 
-	def doScript(self, script_name, params=None):
+	def doScript(self, script_name, params=None, return_all=False):
 		"""This function executes the script for given layout for the current db."""
 		request = [
 			uu({'-db': self._db }),
@@ -242,7 +242,8 @@ class FMServer:
 		result = FMResultset.FMResultset(result)
 
 		try:
-			resp = result.resultset[0] # Try to return latest result
+			# Try to return results from the script
+			resp = result.resultset if return_all else result.resultset[0]
 		except IndexError:
 			resp = None
 
@@ -336,12 +337,12 @@ class FMServer:
 
 		resp = self._doRequest(request)
 		result = FMResultset.FMResultset(resp).resultset
-			
+
 		return result
 
 	def getDbNames(self):
 		"""This function returns the list of open databases"""
-	
+
 		request = []
 		request.append(uu({'-dbnames': '' }))
 
@@ -351,7 +352,7 @@ class FMServer:
 		dbNames = []
 		for dbName in result.resultset:
 			dbNames.append(string.lower(dbName['DATABASE_NAME']))
-		
+
 		return dbNames
 
 	def getLayoutNames(self):
@@ -359,7 +360,7 @@ class FMServer:
 
 		if self._db == '':
 			raise FMError, 'No database was selected'
-	
+
 		request = []
 		request.append(uu({'-db': self._db }))
 		request.append(uu({'-layoutnames': '' }))
@@ -470,7 +471,7 @@ class FMServer:
 			for key, value in WHAT._modified():
 				if WHAT.__new2old__.has_key(key):
 					self._addDBParam(WHAT.__new2old__[key].encode('utf-8'), value)
-				else:	
+				else:
 					self._addDBParam(key, value)
 			self._addDBParam('RECORDID', WHAT.RECORDID)
 			self._addDBParam('MODID', WHAT.MODID)
@@ -502,7 +503,7 @@ class FMServer:
 				if key not in ['RECORDID','MODID']:
 					if WHAT.__new2old__.has_key(key):
 						self._addDBParam(WHAT.__new2old__[key].encode('utf-8'), WHAT[key])
-					else:	
+					else:
 						self._addDBParam(key, WHAT[key])
 		elif type(WHAT)==dict:
 			for key in WHAT:
@@ -536,7 +537,7 @@ class FMServer:
 			for key, value in WHAT._modified():
 				if WHAT.__new2old__.has_key(key):
 					self._addDBParam(WHAT.__new2old__[key].encode('utf-8'), value)
-				else:	
+				else:
 					self._addDBParam(key, value)
 			self._addDBParam('RECORDID', WHAT.RECORDID)
 			self._addDBParam('MODID', WHAT.MODID)
@@ -595,7 +596,7 @@ class FMServer:
 
 				if dbParam[0] == 'RECORDID':
 					request.append(uu({ '-recid': dbParam[1] }))
-				
+
 				elif dbParam[0] == 'MODID':
 					request.append(uu({ '-modid': dbParam[1] }))
 
@@ -615,7 +616,7 @@ class FMServer:
 				self._extra_script = None
 
 			result = self._doRequest(request)
-			
+
 			try:
 				result = FMResultset.FMResultset(result)
 			except FMFieldError, value:
@@ -647,7 +648,7 @@ class FMServer:
 			'port': self._port,
 			'address': self._address,
 		}
-	
+
 	def _buildFileUrl(self, xml_req):
 		"""Builds url for fetching the files from FM."""
 		return '%(protocol)s://%(host)s:%(port)s%(xml_req)s'%{
@@ -677,5 +678,5 @@ class FMServer:
 			auth = (self._login, self._password)
 		)
 		resp.raise_for_status()
-		
+
 		return resp.content
