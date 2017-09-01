@@ -80,7 +80,10 @@ class FMServer:
 		elif isinstance(fm_data, datetime.date):
 			return fm_data.strftime('%d/%m/%Y')
 		elif isinstance(fm_data, datetime.time):
-			return fm_data.strftime('%H:%M')
+			if fm_data.second != 0:
+				return fm_data.strftime('%H:%M:%S')
+			else:
+				return fm_data.strftime('%H:%M')
 		else:
 			return fm_data
 
