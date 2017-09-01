@@ -25,15 +25,16 @@ uu = urllib.urlencode
 class FMServer:
 	"""The main class for communicating with FileMaker Server"""
 
-	def __init__(self, url='http://login:password@localhost/fmi/xml/fmresultset.xml', db='', layout='', debug=False):
+	def __init__(self, url='http://localhost/fmi/xml/fmresultset.xml', login='', password='', db='', layout='', debug=False):
 		"""Class constructor"""
 
-		self._url = url
-		parsed = urlparse.urlparse(self._url)
+		self._url 		= url
+		self._login    	= login or 'pyfilemaker'
+		self._password 	= password or ''
+
+		parsed 			= urlparse.urlparse(self._url)
 
 		self._protocol = parsed.scheme   or 'http'
-		self._login    = parsed.username or 'pyfilemaker'
-		self._password = parsed.password or ''
 		self._host     = parsed.hostname or 'localhost'
 		self._port     = parsed.port     or (443 if self._protocol == 'https' else 80)
 		self._address  = parsed.path     or '/fmi/xml/fmresultset.xml'
