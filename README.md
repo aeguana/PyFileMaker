@@ -1,4 +1,4 @@
-#PyFileMaker - Integrating FileMaker and Python
+# PyFileMaker - Integrating FileMaker and Python
 * (c) 2014-2016 Marcin Kawa, kawa.macin@gmail.com
 * (c) 2006-2008 Klokan Petr Pridal, klokan@klokan.cz
 * (c) 2002-2006 Pieter Claerhout, pieter@yellowduck.be
@@ -9,13 +9,13 @@ Old project urls:
 * http://www.yellowduck.be/filemaker/
 
 -------------------------------------------------------------------------------
-###Examples
+### Examples
 
 - All examles can be found in *[Examples](https://github.com/aeguana/PyFileMaker/tree/master/Examples)* dir
 
 -------------------------------------------------------------------------------
 
-###TABLE OF CONTENTS
+### TABLE OF CONTENTS
 
 1. What is PyFileMaker?
 2. Requirements
@@ -25,7 +25,7 @@ Old project urls:
 6. Changes
 
 -------------------------------------------------------------------------------
-###1. WHAT IS PYFILEMAKER?
+### 1. WHAT IS PYFILEMAKER?
 
 PyFileMaker is a set of Python modules that makes it easy to access and modify
 data stored in a FileMaker Pro/Server database. You can use it to query a FileMaker
@@ -33,7 +33,7 @@ database, but you can also use it to add data to a FileMaker database, you
 can even use it to delete records and execute FileMaker scripts.
 
 -------------------------------------------------------------------------------
-###2. REQUIREMENTS
+### 2. REQUIREMENTS
 
 In order to use PyFileMaker, you will need to have the following software
 installed on your computer:
@@ -57,7 +57,7 @@ PyFileMaker:
 This module was developed and tested on Linux, should work elsewhere too.
 
 -------------------------------------------------------------------------------
-###3. HOW TO INSTALL PYFILEMAKER
+### 3. HOW TO INSTALL PYFILEMAKER
 
 There is nothing special to configure on PyFileMaker. Just make sure the
 PyFileMaker directory, which contains the file FMPro.py/FMServer.py file is
@@ -72,7 +72,7 @@ You also can install the development version directly from github
 pip install -e git+https://github.com/aeguana/PyFileMaker.git#egg=PyFileMaker
 ```
 -------------------------------------------------------------------------------
-###4. HOW TO SET UP YOUR DATABASE
+### 4. HOW TO SET UP YOUR DATABASE
 
 Since the PyFileMaker module relies on the FileMaker Pro Web Companion, you need
 to have it turned on before you can use it. I normally configure it as follows:
@@ -85,7 +85,7 @@ You also might want to check the settings of the Web Companion plugin so that
 you know the connection parameters. I always use the standard port 591.
 
 -------------------------------------------------------------------------------
-###5. WHERE CAN I FIND MORE INFO?
+### 5. WHERE CAN I FIND MORE INFO?
 
 - About Python: http://www.python.org
 - About FileMaker Pro: http://www.filemaker.com
@@ -94,7 +94,7 @@ you know the connection parameters. I always use the standard port 591.
 - About PyFileMaker: http://code.google.com/p/pyfilemaker/
 
 -------------------------------------------------------------------------------
-###6. CHANGES
+### 6. CHANGES
 
 Version 3.3
  - Code cleanup.
