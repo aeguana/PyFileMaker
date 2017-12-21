@@ -55,7 +55,7 @@ def makeFMData( from_dict, locked = False):
 				value = init_dict[key]
 				date, mo, da, ye, time, ho, mi, se = [None] * 8
 				if type(value) in [str, unicode]:
-					date, da, mo, ye, time, ho, mi, se = reDateTime.match( value ).groups()
+					date, mo, da, ye, time, ho, mi, se = reDateTime.match( value ).groups()
 					if mo and int(mo) > 12:
 						mo, da = da, mo
 
