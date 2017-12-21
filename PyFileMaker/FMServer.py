@@ -678,7 +678,10 @@ class FMServer:
 
 		resp = requests.get(
 			url = url,
-			auth = (self._login, self._password)
+			auth = (
+				self._login, 
+				urllib.unquote(self._password) if self._password else self._password
+			)
 		)
 		resp.raise_for_status()
 
