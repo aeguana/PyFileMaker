@@ -6,7 +6,7 @@
 # http://code.google.com/p/pyfilemaker/
 # http://www.yellowduck.be/filemaker/
 
-__version__ = "3.4"
+__version__ = "4.0"
 
 # Import the main modules
 import sys
