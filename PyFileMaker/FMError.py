@@ -7,7 +7,7 @@
 # http://www.yellowduck.be/filemaker/
 
 # Import the main modules
-from exceptions import StandardError
+# StandardError is removed in Python 3, using Exception instead
 
 FMErrorNum = {}
 FMErrorNum[-1] = 'Unknown error'
@@ -283,10 +283,10 @@ FMErrorNum[20413] = 'Too Many Files'
 FMErrorNum[20605] = 'No network connection is available'
 FMErrorNum[20606] = 'Fail to resolve network address'
 
-class FMError( StandardError ):
+class FMError( Exception ):
     """Exception related to operation with FM."""
 
-class FMFieldError( StandardError ):
+class FMFieldError( Exception ):
     """Exception for missing field inside of FM (e.g. FMError 102)."""
 
 class FMServerError( FMError ):
@@ -296,8 +296,8 @@ def FMErrorByNum( num ):
     """This function raises an error based on the specified error code."""
 
     if not num in FMErrorNum.keys():
-        raise FMServerError, (num, FMErrorNum[-1])
+        raise FMServerError(num, FMErrorNum[-1])
     elif num == 102:
-        raise FMFieldError, (num, FMErrorNum[num])
+        raise FMFieldError(num, FMErrorNum[num])
     else:
-        raise FMServerError, (num, FMErrorNum[num])
+        raise FMServerError(num, FMErrorNum[num])

@@ -7,13 +7,11 @@
 # http://www.yellowduck.be/filemaker/
 
 # Import the main modules
-import string
-from types import *
 from pprint import pformat
 
 # Import the FM modules
-import xml2obj
-from FMError import *
+from . import xml2obj
+from .FMError import FMError, FMFieldError, FMServerError, FMErrorByNum
 
 
 class FMXML:

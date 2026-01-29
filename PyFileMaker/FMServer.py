@@ -9,18 +9,16 @@
 # Import the main modules
 import sys
 import re
-import string
-import urllib
-import urlparse
+from urllib.parse import urlencode, urlparse as parse_url
 import requests
 import collections
 import datetime
 
 # Import the FM modules
-import FMResultset
-from FMError import *
+from . import FMResultset
+from .FMError import FMError, FMFieldError, FMServerError
 
-uu = urllib.urlencode
+uu = urlencode
 
 class FMServer:
 	"""The main class for communicating with FileMaker Server"""
@@ -29,7 +27,7 @@ class FMServer:
 		"""Class constructor"""
 
 		self._url = url
-		parsed = urlparse.urlparse(self._url)
+		parsed = parse_url(self._url)
 
 		self._protocol = parsed.scheme   or 'http'
 		self._login    = parsed.username or 'pyfilemaker'
@@ -106,7 +104,7 @@ class FMServer:
 		elif type(maxRec) == str and (maxRec.lower == 'all' or maxRec.isdigit()):
 			self._maxRecords = maxRec.lower
 		else:
-			raise FMError, 'Unsupported -max value (not a number or "all").'
+			raise FMError('Unsupported -max value (not a number or "all").')
 
 	def _setSkipRecords(self, skipRec):
 		"""Specifies how many records to skip in the found set"""
@@ -114,13 +112,13 @@ class FMServer:
 		if type(skipRec) == int or (type(skipRec) == str and skipRec.isdigit()):
 			self._skipRecords = skipRec
 		else:
-			raise FMError, 'Unsupported -skip value (not a number).'
+			raise FMError('Unsupported -skip value (not a number).')
 
 	def _setLogicalOperator(self, lop):
 		"""Sets the way the find fields should be combined together."""
 
 		if not lop.lower() in ['and', 'or']:
-			raise FMError, 'Unsupported logical operator (not one of "and" or "or").'
+			raise FMError('Unsupported logical operator (not one of "and" or "or").')
 
 		self._lop = lop.lower()
 
@@ -162,8 +160,8 @@ class FMServer:
 				'<>':'neq'
 			}
 
-		if not string.lower(oper) in validOperators.keys():
-			raise FMError, 'Invalid operator "'+ oper + '" for "' + field + '"'
+		if not oper.lower() in validOperators.keys():
+			raise FMError('Invalid operator "'+ oper + '" for "' + field + '"')
 
 		oper = validOperators[oper.lower()]
 		self._dbParams.append(
@@ -200,11 +198,11 @@ class FMServer:
 				'>':'descend'
 			}
 
-			if not string.lower(order) in validSortOrders.keys():
-				raise FMError, 'Invalid sort order for "' + field + '"'
+			if not order.lower() in validSortOrders.keys():
+				raise FMError('Invalid sort order for "' + field + '"')
 
 		self._sortParams.append(
-			[field, validSortOrders[string.lower(order)]]
+			[field, validSortOrders[order.lower()]]
 		)
 
 	def _checkRecordID(self):
@@ -296,11 +294,11 @@ class FMServer:
 		query_params = []
 		query_values = []
 		_idx = 1
-		for key, value in query_dict.iteritems():
+		for key, value in query_dict.items():
 			if isinstance(value, collections.Mapping):
 				inner_query_params = []
-				for inner_key, inner_value in value.iteritems():
-					if not isinstance(inner_value, basestring) and isinstance(inner_value, collections.Iterable):
+				for inner_key, inner_value in value.items():
+					if not isinstance(inner_value, str) and isinstance(inner_value, collections.abc.Iterable):
 						for inner_inner_value in inner_value:
 							q_list = _and_process_value(_idx, inner_key, inner_inner_value)
 							inner_query_params += q_list[0]
@@ -315,7 +313,7 @@ class FMServer:
 
 				query_params += ['(%s)' % ', '.join(inner_query_params)]
 
-			elif not isinstance(value, basestring) and isinstance(value, collections.Iterable):
+			elif not isinstance(value, str) and isinstance(value, collections.abc.Iterable):
 				for inner_value in value:
 					q_list = _or_process_value(_idx, key, inner_value)
 					query_params += q_list[0]
@@ -354,7 +352,7 @@ class FMServer:
 
 		dbNames = []
 		for dbName in result.resultset:
-			dbNames.append(string.lower(dbName['DATABASE_NAME']))
+			dbNames.append(dbName['DATABASE_NAME'].lower())
 
 		return dbNames
 
@@ -362,7 +360,7 @@ class FMServer:
 		"""This function returns the list of layouts for the current db."""
 
 		if self._db == '':
-			raise FMError, 'No database was selected'
+			raise FMError('No database was selected')
 
 		request = []
 		request.append(uu({'-db': self._db }))
@@ -373,7 +371,7 @@ class FMServer:
 
 		layoutNames = []
 		for layoutName in result.resultset:
-			layoutNames.append(string.lower(layoutName['LAYOUT_NAME']))
+			layoutNames.append(layoutName['LAYOUT_NAME'].lower())
 
 		return layoutNames
 
@@ -381,7 +379,7 @@ class FMServer:
 		"""This function returns the list of layouts for the current db."""
 
 		if self._db == '':
-			raise FMError, 'No database was selected'
+			raise FMError('No database was selected')
 
 		request = []
 		request.append(uu({'-db': self._db }))
@@ -392,7 +390,7 @@ class FMServer:
 
 		scriptNames = []
 		for scriptName in result.resultset:
-			scriptNames.append(string.lower(scriptName['SCRIPT_NAME']))
+			scriptNames.append(scriptName['SCRIPT_NAME'].lower())
 
 		return scriptNames
 
@@ -405,7 +403,7 @@ class FMServer:
 			for key in WHAT:
 				self._addDBParam(key, WHAT[key])
 		else:
-			raise FMError, 'Python Runtime: Object type (%s) given to on of function doFind* as argument WHAT cannot be used.' % type(WHAT)
+			raise FMError('Python Runtime: Object type (%s) given to on of function doFind* as argument WHAT cannot be used.' % type(WHAT))
 
 		for key in SORT:
 			self._addSortParam(key, SORT[key])
@@ -415,7 +413,7 @@ class FMServer:
 		if LOP: self._setLogicalOperator(LOP)
 
 		if self._layout == '':
-			raise FMError, 'No layout was selected'
+			raise FMError('No layout was selected')
 
 	def doFind(self, WHAT={}, SORT=[], SKIP=None, MAX=None, LOP='AND', **params):
 		"""This function will perform the command -find."""
@@ -454,16 +452,16 @@ class FMServer:
 		if hasattr(WHAT, '_modified'):
 			self._addDBParam('RECORDID', WHAT.RECORDID)
 			self._addDBParam('MODID', WHAT.MODID)
-		elif type(WHAT) == dict and WHAT.has_key('RECORDID'):
+		elif type(WHAT) == dict and 'RECORDID' in WHAT:
 			self._addDBParam('RECORDID', WHAT['RECORDID'])
 		else:
-			raise FMError, 'Python Runtime: Object type (%s) given to function doDelete as argument WHAT cannot be used.' % type(WHAT)
+			raise FMError('Python Runtime: Object type (%s) given to function doDelete as argument WHAT cannot be used.' % type(WHAT))
 
 		if self._layout == '':
-			raise FMError, 'No layout was selected'
+			raise FMError('No layout was selected')
 
 		if self._checkRecordID() == 0:
-			raise FMError, 'RecordID is missing'
+			raise FMError('RecordID is missing')
 
 		return self._doAction('-delete')
 
@@ -472,7 +470,7 @@ class FMServer:
 
 		if hasattr(WHAT, '_modified'):
 			for key, value in WHAT._modified():
-				if WHAT.__new2old__.has_key(key):
+				if key in WHAT.__new2old__:
 					self._addDBParam(WHAT.__new2old__[key].encode('utf-8'), value)
 				else:
 					self._addDBParam(key, value)
@@ -482,19 +480,19 @@ class FMServer:
 			for key in WHAT:
 				self._addDBParam(key, WHAT[key])
 		else:
-			raise FMError, 'Python Runtime: Object type (%s) given to function doEdit as argument WHAT cannot be used.' % type(WHAT)
+			raise FMError('Python Runtime: Object type (%s) given to function doEdit as argument WHAT cannot be used.' % type(WHAT))
 
 		if self._layout == '':
-			raise FMError, 'No layout was selected'
+			raise FMError('No layout was selected')
 
 		for key in params:
 			self._addDBParam(key, params[key])
 
 		if len(self._dbParams) == 0:
-			raise FMError, 'No data to be edited'
+			raise FMError('No data to be edited')
 
 		if self._checkRecordID() == 0:
-			raise FMError, 'RecordID is missing'
+			raise FMError('RecordID is missing')
 
 		return self._doAction('-edit')
 
@@ -504,7 +502,7 @@ class FMServer:
 		if hasattr(WHAT, '_modified'):
 			for key in WHAT:
 				if key not in ['RECORDID','MODID']:
-					if WHAT.__new2old__.has_key(key):
+					if key in WHAT.__new2old__:
 						self._addDBParam(WHAT.__new2old__[key].encode('utf-8'), WHAT[key])
 					else:
 						self._addDBParam(key, WHAT[key])
@@ -512,16 +510,16 @@ class FMServer:
 			for key in WHAT:
 				self._addDBParam(key, WHAT[key])
 		else:
-			raise FMError, 'Python Runtime: Object type (%s) given to function doNew as argument WHAT cannot be used.' % type(WHAT)
+			raise FMError('Python Runtime: Object type (%s) given to function doNew as argument WHAT cannot be used.' % type(WHAT))
 
 		if self._layout == '':
-			raise FMError, 'No layout was selected'
+			raise FMError('No layout was selected')
 
 		for key in params:
 			self._addDBParam(key, params[key])
 
 		if len(self._dbParams) == 0:
-			raise FMError, 'No data to be added'
+			raise FMError('No data to be added')
 
 		return self._doAction('-new')
 
@@ -529,7 +527,7 @@ class FMServer:
 		"""This function will perform the command -view. (Retrieves the metadata section of XML document and an empty recordset)"""
 
 		if self._layout == '':
-			raise FMError, 'No layout was selected'
+			raise FMError('No layout was selected')
 
 		return self._doAction('-view')
 
@@ -538,7 +536,7 @@ class FMServer:
 
 		if hasattr(WHAT, '_modified'):
 			for key, value in WHAT._modified():
-				if WHAT.__new2old__.has_key(key):
+				if key in WHAT.__new2old__:
 					self._addDBParam(WHAT.__new2old__[key].encode('utf-8'), value)
 				else:
 					self._addDBParam(key, value)
@@ -548,16 +546,16 @@ class FMServer:
 			for key in WHAT:
 				self._addDBParam(key, WHAT[key])
 		else:
-			raise FMError, 'Python Runtime: Object type (%s) given to function doDup as argument WHAT cannot be used.' % type(WHAT)
+			raise FMError('Python Runtime: Object type (%s) given to function doDup as argument WHAT cannot be used.' % type(WHAT))
 
 		if self._layout == '':
-			raise FMError, 'No layout was selected'
+			raise FMError('No layout was selected')
 
 		for key in params:
 			self._addDBParam(key, params[key])
 
 		if self._checkRecordID() == 0:
-			raise FMError, 'RecordID is missing'
+			raise FMError('RecordID is missing')
 
 		return self._doAction('-dup')
 
@@ -565,7 +563,7 @@ class FMServer:
 		"""This function will perform a FileMaker action."""
 
 		if self._db == '':
-			raise FMError, 'No database was selected'
+			raise FMError('No database was selected')
 
 		result = ''
 
@@ -622,14 +620,14 @@ class FMServer:
 
 			try:
 				result = FMResultset.FMResultset(result)
-			except FMFieldError, value:
+			except FMFieldError as value:
 				realfields = FMServer(self._buildUrl(), self._db, self._layout).doView()
 
 				l = []
 				for k, v in self._dbParams:
 					if k[-3:] != '.op' and k[0] != '-':
 						l.append(("'%s'" % k.replace('::','.')).encode('utf-8'))
-				raise FMError, "Field(s) %s not found on layout '%s'" % (', '.join(l), self._layout)
+				raise FMError("Field(s) %s not found on layout '%s'" % (', '.join(l), self._layout))
 
 			if action == '-view':
 				result = result.fieldNames
@@ -674,7 +672,7 @@ class FMServer:
 			url = "%s?%s" % (self._buildUrl(), request)
 
 		if self._debug:
-			print '[PyFileMaker DEBUG] ', url
+			print('[PyFileMaker DEBUG]', url)
 
 		resp = requests.get(
 			url = url,

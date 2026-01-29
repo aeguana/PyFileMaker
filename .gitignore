@@ -1,4 +1,5 @@
 *.pyc
+*.claude
 build/
 dist/
 PyFileMaker.egg-info/

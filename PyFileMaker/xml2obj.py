@@ -3,7 +3,6 @@ Borrowed from wxPython XML tree demo and modified.
 """
 
 import sys
-import string
 from xml.parsers import expat
 
 class Element:
@@ -29,8 +28,8 @@ class Element:
 	
 	def getData(self):
 		'Get the cdata'
-		## HACK: string.strip to remove unneeded spaces.
-		return string.strip( self.cdata )
+		## HACK: str.strip to remove unneeded spaces.
+		return self.cdata.strip()
 		
 	def getElements(self,name=''):
 		'Get a list of child elements'
